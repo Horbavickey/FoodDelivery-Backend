@@ -1,0 +1,12 @@
+C:\Users\obanl\OneDrive\Pictures\BackEnd Project\FoodDelivery\FoodDelivery.Application\bin\Debug\net8.0\FoodDelivery.Application.deps.json
+C:\Users\obanl\OneDrive\Pictures\BackEnd Project\FoodDelivery\FoodDelivery.Application\bin\Debug\net8.0\FoodDelivery.Application.dll
+C:\Users\obanl\OneDrive\Pictures\BackEnd Project\FoodDelivery\FoodDelivery.Application\bin\Debug\net8.0\FoodDelivery.Application.pdb
+C:\Users\obanl\OneDrive\Pictures\BackEnd Project\FoodDelivery\FoodDelivery.Application\obj\Debug\net8.0\FoodDelivery.Application.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\obanl\OneDrive\Pictures\BackEnd Project\FoodDelivery\FoodDelivery.Application\obj\Debug\net8.0\FoodDelivery.Application.AssemblyInfoInputs.cache
+C:\Users\obanl\OneDrive\Pictures\BackEnd Project\FoodDelivery\FoodDelivery.Application\obj\Debug\net8.0\FoodDelivery.Application.AssemblyInfo.cs
+C:\Users\obanl\OneDrive\Pictures\BackEnd Project\FoodDelivery\FoodDelivery.Application\obj\Debug\net8.0\FoodDelivery.Application.csproj.CoreCompileInputs.cache
+C:\Users\obanl\OneDrive\Pictures\BackEnd Project\FoodDelivery\FoodDelivery.Application\obj\Debug\net8.0\FoodDelivery.Application.sourcelink.json
+C:\Users\obanl\OneDrive\Pictures\BackEnd Project\FoodDelivery\FoodDelivery.Application\obj\Debug\net8.0\FoodDelivery.Application.dll
+C:\Users\obanl\OneDrive\Pictures\BackEnd Project\FoodDelivery\FoodDelivery.Application\obj\Debug\net8.0\refint\FoodDelivery.Application.dll
+C:\Users\obanl\OneDrive\Pictures\BackEnd Project\FoodDelivery\FoodDelivery.Application\obj\Debug\net8.0\FoodDelivery.Application.pdb
+C:\Users\obanl\OneDrive\Pictures\BackEnd Project\FoodDelivery\FoodDelivery.Application\obj\Debug\net8.0\ref\FoodDelivery.Application.dll
