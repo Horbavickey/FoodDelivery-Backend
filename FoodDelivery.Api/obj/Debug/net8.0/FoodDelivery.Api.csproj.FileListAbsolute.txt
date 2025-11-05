@@ -146,3 +146,4 @@ C:\Users\obanl\OneDrive\Pictures\BackEnd Project\FoodDelivery\FoodDelivery.Api\b
 C:\Users\obanl\OneDrive\Pictures\BackEnd Project\FoodDelivery\FoodDelivery.Api\bin\Debug\net8.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
 C:\Users\obanl\OneDrive\Pictures\BackEnd Project\FoodDelivery\FoodDelivery.Api\bin\Debug\net8.0\Microsoft.IdentityModel.Tokens.dll
 C:\Users\obanl\OneDrive\Pictures\BackEnd Project\FoodDelivery\FoodDelivery.Api\bin\Debug\net8.0\System.IdentityModel.Tokens.Jwt.dll
+C:\Users\obanl\OneDrive\Pictures\BackEnd Project\FoodDelivery\FoodDelivery.Api\bin\Debug\net8.0\BCrypt.Net-Next.dll

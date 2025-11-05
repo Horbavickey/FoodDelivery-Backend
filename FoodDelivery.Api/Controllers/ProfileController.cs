@@ -1,11 +1,11 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Text.RegularExpressions;
 using FoodDelivery.Api.Models;
 using FoodDelivery.Infrastructure;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Text.RegularExpressions;
 
 namespace FoodDelivery.Api.Controllers;
 
@@ -18,11 +18,17 @@ public class ProfileController : ControllerBase
     public ProfileController(FoodDeliveryDbContext db) => _db = db;
 
     private Guid CurrentUserId()
-    {
-        var sub = User.FindFirstValue(JwtRegisteredClaimNames.Sub);
-        return Guid.Parse(sub!);
-    }
+{
+    // Try both standard places: NameIdentifier and "sub"
+    var id =
+        User.FindFirstValue(ClaimTypes.NameIdentifier) ??
+        User.FindFirstValue(JwtRegisteredClaimNames.Sub);
 
+    if (string.IsNullOrWhiteSpace(id))
+        throw new InvalidOperationException("User id claim not found in token.");
+
+    return Guid.Parse(id);
+}
     [HttpGet]
     public async Task<ActionResult<ProfileResponse>> Get()
     {
@@ -43,15 +49,13 @@ public class ProfileController : ControllerBase
     [HttpPut]
     public async Task<IActionResult> Update([FromBody] UpdateProfileRequest req)
     {
-        var id = CurrentUserId();
-        var u = await _db.Users.FirstOrDefaultAsync(x => x.Id == id);
+        var u = await _db.Users.FirstOrDefaultAsync(x => x.Id == CurrentUserId());
         if (u == null) return NotFound();
 
         if (!string.IsNullOrWhiteSpace(req.Phone))
         {
-            // +7 (xxx) xxx-xx-xx-xx
-            var ok = Regex.IsMatch(req.Phone, @"^\+7 \(\d{3}\) \d{3}-\d{2}-\d{2}-\d{2}$");
-            if (!ok) return BadRequest("Phone must be in format +7 (xxx) xxx-xx-xx-xx");
+            var ok = Regex.IsMatch(req.Phone, @"^\+7 \(\d{3}\) \d{3}-\d{2}-\d{2}$");
+            if (!ok) return BadRequest("Phone must match +7 (xxx) xxx-xx-xx");
             u.Phone = req.Phone;
         }
 

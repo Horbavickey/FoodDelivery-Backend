@@ -1,9 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "rb5rXMBAQ2Y=",
+  "dgSpecHash": "psonYwm1eqY=",
   "success": true,
   "projectFilePath": "C:\\Users\\obanl\\OneDrive\\Pictures\\BackEnd Project\\FoodDelivery\\FoodDelivery.Api\\FoodDelivery.Api.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\obanl\\.nuget\\packages\\bcrypt.net-next\\4.0.3\\bcrypt.net-next.4.0.3.nupkg.sha512",
     "C:\\Users\\obanl\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
     "C:\\Users\\obanl\\.nuget\\packages\\microsoft.aspnetcore.authentication.jwtbearer\\8.0.21\\microsoft.aspnetcore.authentication.jwtbearer.8.0.21.nupkg.sha512",
     "C:\\Users\\obanl\\.nuget\\packages\\microsoft.aspnetcore.openapi\\8.0.8\\microsoft.aspnetcore.openapi.8.0.8.nupkg.sha512",
