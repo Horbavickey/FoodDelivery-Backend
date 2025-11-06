@@ -15,14 +15,25 @@ public class OrdersController : ControllerBase
 {
     private readonly FoodDeliveryDbContext _db;
     public OrdersController(FoodDeliveryDbContext db) => _db = db;
-    private Guid CurrentUserId() => Guid.Parse(User.FindFirstValue(JwtRegisteredClaimNames.Sub)!);
+
+    private Guid CurrentUserId()
+    {
+        var id = User.FindFirstValue(ClaimTypes.NameIdentifier) ??
+                 User.FindFirstValue(JwtRegisteredClaimNames.Sub);
+
+        if (string.IsNullOrWhiteSpace(id) || !Guid.TryParse(id, out var guid))
+            throw new InvalidOperationException("User id claim not found or invalid.");
+
+        return guid;
+    }
 
     [HttpPost("checkout")]
     public async Task<IActionResult> Checkout()
     {
         var userId = CurrentUserId();
         var lead = await _db.ServerSettings.AsNoTracking()
-                     .Select(s => (int?)s.DeliveryLeadMinutes).FirstOrDefaultAsync() ?? 30;
+                     .Select(s => (int?)s.DeliveryLeadMinutes)
+                     .FirstOrDefaultAsync() ?? 30;
 
         var order = new Order
         {

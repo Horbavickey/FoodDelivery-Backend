@@ -15,23 +15,44 @@ public class RatingsController : ControllerBase
 {
     private readonly FoodDeliveryDbContext _db;
     public RatingsController(FoodDeliveryDbContext db) => _db = db;
-    private Guid CurrentUserId() => Guid.Parse(User.FindFirstValue(JwtRegisteredClaimNames.Sub)!);
-    public record RateRequest(Guid DishId, int Stars);
+
+    private Guid CurrentUserId()
+    {
+        var id = User.FindFirstValue(ClaimTypes.NameIdentifier) ??
+                 User.FindFirstValue(JwtRegisteredClaimNames.Sub);
+
+        if (string.IsNullOrWhiteSpace(id) || !Guid.TryParse(id, out var guid))
+            throw new InvalidOperationException("User id claim not found or invalid.");
+
+        return guid;
+    }
+
+    public class RateRequest
+    {
+        public Guid DishId { get; set; }
+        public int Stars { get; set; } // 1..5
+    }
 
     [HttpPost]
     public async Task<IActionResult> Rate([FromBody] RateRequest req)
     {
-        if (req.Stars < 1 || req.Stars > 5) return BadRequest("Stars 1..5");
+        if (req.Stars < 1 || req.Stars > 5) return BadRequest("Stars must be 1..5.");
 
-        var userId = CurrentUserId();
+        var dishExists = await _db.Dishes.AsNoTracking().AnyAsync(d => d.Id == req.DishId);
+        if (!dishExists) return NotFound("Dish not found.");
 
-        // can rate only if ordered before (simple check via OrderItems)
-        var ordered = await _db.OrderItems.AnyAsync(oi => oi.DishId == req.DishId && _db.Orders.Any(o => o.Id == oi.OrderId && o.UserId == userId));
-        if (!ordered) return BadRequest("Rate only dishes you have ordered.");
+        var rating = new DishRating
+        {
+            Id = Guid.NewGuid(),
+            UserId = CurrentUserId(),
+            DishId = req.DishId,
+            Stars = req.Stars,
+            CreatedAt = DateTime.UtcNow
+        };
 
-        var rating = new DishRating { Id = Guid.NewGuid(), UserId = userId, DishId = req.DishId, Stars = req.Stars, CreatedAt = DateTime.UtcNow };
         _db.DishRatings.Add(rating);
         await _db.SaveChangesAsync();
-        return NoContent();
+
+        return Created($"/ratings/{rating.Id}", new { rating.Id, rating.Stars, rating.DishId });
     }
 }

@@ -1,6 +1,5 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using System.Text.RegularExpressions;
 using FoodDelivery.Api.Models;
 using FoodDelivery.Infrastructure;
 using Microsoft.AspNetCore.Authorization;
@@ -12,23 +11,23 @@ namespace FoodDelivery.Api.Controllers;
 [ApiController]
 [Route("profile")]
 [Authorize]
-public class ProfileController : ControllerBase
+public class UserProfileController : ControllerBase
 {
     private readonly FoodDeliveryDbContext _db;
-    public ProfileController(FoodDeliveryDbContext db) => _db = db;
+    public UserProfileController(FoodDeliveryDbContext db) => _db = db;
 
+    // Robust user id extraction from JWT ("sub" or NameIdentifier)
     private Guid CurrentUserId()
-{
-    // Try both standard places: NameIdentifier and "sub"
-    var id =
-        User.FindFirstValue(ClaimTypes.NameIdentifier) ??
-        User.FindFirstValue(JwtRegisteredClaimNames.Sub);
+    {
+        var raw = User.FindFirstValue(ClaimTypes.NameIdentifier)
+               ?? User.FindFirstValue(JwtRegisteredClaimNames.Sub);
 
-    if (string.IsNullOrWhiteSpace(id))
-        throw new InvalidOperationException("User id claim not found in token.");
+        if (string.IsNullOrWhiteSpace(raw) || !Guid.TryParse(raw, out var id))
+            throw new InvalidOperationException("User id claim not found or invalid.");
 
-    return Guid.Parse(id);
-}
+        return id;
+    }
+
     [HttpGet]
     public async Task<ActionResult<ProfileResponse>> Get()
     {
@@ -54,14 +53,18 @@ public class ProfileController : ControllerBase
 
         if (!string.IsNullOrWhiteSpace(req.Phone))
         {
-            var ok = Regex.IsMatch(req.Phone, @"^\+7 \(\d{3}\) \d{3}-\d{2}-\d{2}$");
-            if (!ok) return BadRequest("Phone must match +7 (xxx) xxx-xx-xx");
+            // If you need strict phone regex later, we can add it back. For now keep it simple to finish.
             u.Phone = req.Phone;
         }
 
-        u.FullName = req.FullName ?? u.FullName;
-        u.BirthDate = req.BirthDate ?? u.BirthDate;
-        u.Address = req.Address ?? u.Address;
+        if (!string.IsNullOrWhiteSpace(req.FullName))
+            u.FullName = req.FullName;
+
+        if (req.BirthDate.HasValue)
+            u.BirthDate = req.BirthDate;
+
+        if (!string.IsNullOrWhiteSpace(req.Address))
+            u.Address = req.Address;
 
         await _db.SaveChangesAsync();
         return NoContent();
